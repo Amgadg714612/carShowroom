@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل دخول المسؤول</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #5e5e5e, #b8b8b8);
+      background-color: #f3f4f6;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+      text-align: center;
+    }
+    .language-switcher {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #286a99;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+    .language-switcher:hover {
+      background: #1d4f7c;
+    }
+  </style>
+</head>
+<body>
+
+<!-- زر تغيير اللغة -->
+<div class="language-switcher" onclick="switchLanguage()" id="language-switcher">EN</div>
+
+<div class="login-container">
+  <h1 id="login-heading">تسجيل دخول المسؤول</h1>
+  <form id="loginForm">
+    <label for="admin-id" id="admin-id-label">رقم الهوية</label>
+    <input type="text" id="admin-id" name="admin-id" placeholder="أدخل رقم الهوية" required>
+    <div id="error-message" class="error"></div>
+    <button type="submit" id="login-btn">تسجيل الدخول</button>
+  </form>
+</div>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // منع إعادة تحميل الصفحة
+    
+    const adminId = document.getElementById('admin-id').value; // جلب رقم الهوية المدخل
+    const errorMessage = document.getElementById('error-message');
+    const validId = "12345"; // الرقم الصحيح الذي يجب إدخاله
+    
+    if (adminId === validId) {
+      window.location.href = "مؤجر2.html"; // الانتقال إلى الصفحة إذا كان الرمز صحيحًا
+    } else {
+      errorMessage.textContent = "رقم الهوية غير صحيح، حاول مرة أخرى.";
+    }
+  });
+
+  function switchLanguage() {
+    const currentLang = document.documentElement.lang;
+
+    if (currentLang === "ar") {
+      document.documentElement.lang = "en";
+      document.body.style.direction = "ltr";
+      document.getElementById("login-heading").textContent = "Owner Login";
+      document.getElementById("admin-id-label").textContent = "ID Number";
+      document.getElementById("admin-id").placeholder = "Enter your ID";
+      document.getElementById("login-btn").textContent = "Login";
+      document.getElementById("error-message").textContent = "";
+      document.getElementById("language-switcher").textContent = "AR";
+    } else {
+      document.documentElement.lang = "ar";
+      document.body.style.direction = "rtl";
+      document.getElementById("login-heading").textContent = "تسجيل دخول المسؤول";
+      document.getElementById("admin-id-label").textContent = "رقم الهوية";
+      document.getElementById("admin-id").placeholder = "أدخل رقم الهوية";
+      document.getElementById("login-btn").textContent = "تسجيل الدخول";
+      document.getElementById("error-message").textContent = "";
+      document.getElementById("language-switcher").textContent = "EN";
+    }
+  }
+</script>
+
+</body>
+</html>

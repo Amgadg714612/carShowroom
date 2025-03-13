@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم المسؤول</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to right, #5e5e5e, #b8b8b8);
+      font-family: 'Tajawal', sans-serif;
+      background-color: #f9fafb;
+      direction: rtl;
+    }
+
+    .header {
+      background-color: #4070a7;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* قائمة الجانبية */
+    .container {
+      display: flex;
+      height: calc(100vh - 80px);
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #2d3748;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar button {
+      background-color: transparent;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      text-align: right;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      border-radius: 8px;
+    }
+
+    .sidebar button:hover {
+      background-color: #4a5568;
+    }
+
+    .sidebar button.active {
+      background-color: #4a90e2;
+    }
+
+    .sidebar .logout-btn {
+      margin-top: auto;
+      background-color: #e53e3e;
+      color: white;
+      font-size: 18px;
+    }
+
+    .sidebar .logout-btn:hover {
+      background-color: #c53030;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .card h2 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background-color: #357ab7;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .table th,
+    .table td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    .table th {
+      background-color: #4a90e2;
+      color: white;
+    }
+
+    .table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    /* زر تغيير اللغة */
+    .language-switcher {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #286a99;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .language-switcher:hover {
+      background: #1d4f7c;
+    }
+  </style>
+</head>
+<body>
+
+<!-- زر تغيير اللغة -->
+<div class="language-switcher" onclick="switchLanguage()" id="language-switcher">EN</div>
+
+<!-- شريط العنوان -->
+<div class="header" id="header-title">لوحة تحكم المسؤول</div>
+
+<!-- الحاوية الرئيسية -->
+<div class="container">
+  <div class="sidebar">
+    <button class="active" onclick="showSection('add-car')">إضافة سيارة</button>
+    <button onclick="showSection('add-images-specs')">إضافة صور ومواصفات</button> <!-- الزر الجديد -->
+    <button onclick="showSection('edit-prices')">تعديل الأسعار</button>
+    <button onclick="showSection('view-rented')">السيارات المؤجرة</button>
+    <button onclick="showSection('list-cars')">قائمة السيارات</button>
+    <button onclick="showSection('renter-info')">معلومات المستأجرين</button>
+    <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+  </div>
+
+  <div class="main-content">
+    <!-- <div id="add-car" class="card">
+      <h2>إضافة سيارة جديدة</h2>
+      <div class="form-group">
+        <label>اسم السيارة</label>
+        <input type="text" placeholder="أدخل اسم السيارة">
+      </div>
+      <div class="form-group">
+        <label>model for car </label>
+        <input type="text" placeholder="enter model">
+      </div>
+      <div class="form-group">
+        <label>السعر اليومي</label>
+        <input type="number" placeholder="أدخل السعر">
+      </div>
+      <div class="form-group">
+        <label> صورة السيارة</label>
+        <input type="file" placeholder="ادخل صورة السيارة ">
+      </div>
+      <button class="btn">إضافة السيارة</button>
+    
+    
+    </div> -->
+    <div id="add-car" class="card">
+      <h2>إضافة سيارة جديدة</h2>
+      <div class="form-group">
+          <label>اسم السيارة</label>
+          <input type="text" id="car-name" placeholder="أدخل اسم السيارة">
+      </div>
+      <div class="form-group">
+          <label>موديل السيارة</label>
+          <input type="text" id="car-model" placeholder="أدخل الموديل">
+      </div>
+      <div class="form-group">
+          <label>الألوان المتوفرة</label>
+          <input type="text" id="car-colors" placeholder="أدخل الألوان (مفصولة بفاصلة)">
+      </div>
+      <div class="form-group">
+          <label>نوع السيارة</label>
+          <select id="car-type">
+              <option value="سيدان">سيدان</option>
+              <option value="SUV">SUV</option>
+              <option value="كوبيه">كوبيه</option>
+              <option value="هايبرد">هايبرد</option>
+          </select>
+      </div>
+      <div class="form-group">
+          <label>السعر اليومي</label>
+          <input type="number" id="car-price" placeholder="أدخل السعر">
+      </div>
+      <div class="form-group">
+          <label>صورة السيارة</label>
+          <input type="file" id="car-image" accept="image/*">
+      </div>
+      <button class="btn" onclick="addCar()">إضافة السيارة</button>
+  </div>
+
+  
+    <!-- قسم إضافة صور ومواصفات -->
+    <div id="add-images-specs" class="card" style="display: none;">
+      <h2>إضافة صور ومواصفات السيارة</h2>
+      <div class="form-group">
+          <label>اختر السيارة</label>
+          <select id="car-selectB">
+              <!-- الخيارات سيتم تحميلها هنا باستخدام JavaScript -->
+          </select>
+      </div>
+      <div class="form-group">
+          <label>تحميل الصور</label>
+          <input type="file" id="car-imagesB" multiple accept="image/*">
+      </div>
+      <div class="form-group">
+          <label>النوع</label>
+          <input type="text" id="car-typeB" placeholder="أدخل النوع (مثال: سيدان)">
+      </div>
+      <div class="form-group">
+          <label>الموديل</label>
+          <input type="text" id="car-modelB" placeholder="أدخل الموديل (مثال: 2024)">
+      </div>
+      <div class="form-group">
+          <label>المحرك</label>
+          <input type="text" id="car-engineB" placeholder="أدخل المحرك (مثال: 3.5 لتر 6 سلندر)">
+      </div>
+      <div class="form-group">
+          <label>اللون</label>
+          <input type="text" id="car-colorB" placeholder="أدخل اللون (مثال: أبيض)">
+      </div>
+      <div class="form-group">
+          <label>السعر اليومي</label>
+          <input type="number" id="car-priceB" placeholder="أدخل السعر (مثال: 180)">
+      </div>
+      <button class="btn" onclick="addImagesAndSpecs()">إضافة الصور والمواصفات</button>
+  </div>
+
+
+    <div id="edit-prices" class="card" style="display: none;">
+      <h2>تعديل أسعار السيارات</h2>
+      <div class="form-group">
+        <label>اختر السيارة</label>
+        <select id="car-select">
+          <!-- الخيارات سيتم تحميلها هنا باستخدام الجافا سكربت -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label>السعر الجديد</label>
+        <input type="number" id="new-price" placeholder="أدخل السعر الجديد">
+      </div>
+      <button class="btn" id="save-price">حفظ التغييرات</button>
+    </div>
+
+    <div id="view-rented" class="card" style="display: none;">
+      <h2>السيارات المؤجرة</h2>
+      <table class="table" id="rented-cars-table">
+          <thead>
+              <tr>
+                  <th>اسم السيارة</th>
+                  <th>اسم المستأجر</th>
+                  <th>مدة الإيجار</th>
+                  <th>السعر</th>
+              </tr>
+          </thead>
+          <tbody>
+              <!-- البيانات سيتم إضافتها هنا بواسطة JavaScript -->
+          </tbody>
+      </table>
+  </div>
+  
+
+ 
+     
+
+    <div id="list-cars" class="card" style="display: none;">
+      <h2>قائمة السيارات المتوفرة</h2>
+      <table class="table" id="available-cars-table">
+          <thead>
+              <tr>
+                  <th>اسم السيارة</th>
+                  <th>السعر اليومي (ريال)</th>
+                  <th>الحالة</th>
+                  <th>صورة السيارة</th> <!-- عمود جديد للصورة -->
+              </tr>
+          </thead>
+          <tbody>
+              <!-- البيانات سيتم إضافتها هنا بواسطة JavaScript -->
+          </tbody>
+      </table>
+  </div>
+    <div id="renter-info" class="card" style="display: none;">
+      <h2>معلومات جميع المستأجرين</h2>
+      <p>تفاصيل المستأجرين الذين استأجروا السيارات:</p>
+      <table class="table" id="renter-info-table">
+          <thead>
+              <tr>
+                  <th>اسم المستأجر</th>
+                  <th>الرقم الوطني</th>
+                  <th>السيارة المستأجرة</th>
+                  <th>مدة الإيجار</th>
+                  <th>تاريخ الإيجار</th>
+              </tr>
+          </thead>
+          <tbody>
+              <!-- البيانات سيتم إضافتها هنا بواسطة JavaScript -->
+          </tbody>
+      </table>
+  </div>
+
+  </div>
+</div>
+
+<script>
+  function showSection(id) {
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => card.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+
+    const buttons = document.querySelectorAll('.sidebar button');
+    buttons.forEach(button => button.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function switchLanguage() {
+    const currentLang = document.documentElement.lang;
+
+    if (currentLang === "ar") {
+      document.documentElement.lang = "en";
+      document.body.style.direction = "ltr";
+      document.getElementById("header-title").textContent = "Admin Dashboard";
+      document.querySelectorAll('.sidebar button')[0].textContent = "Add Car";
+      document.querySelectorAll('.sidebar button')[1].textContent = "Edit Prices";
+      document.querySelectorAll('.sidebar button')[2].textContent = "Rented Cars";
+      document.querySelectorAll('.sidebar button')[3].textContent = "Cars List";
+      document.querySelectorAll('.sidebar button')[4].textContent = "Renter Information";
+      document.querySelector('.logout-btn').textContent = "Logout";
+      document.getElementById("language-switcher").textContent = "AR";
+    } else {
+      document.documentElement.lang = "ar";
+      document.body.style.direction = "rtl";
+      document.getElementById("header-title").textContent = "لوحة تحكم المسؤول";
+      document.querySelectorAll('.sidebar button')[0].textContent = "إضافة سيارة";
+      document.querySelectorAll('.sidebar button')[1].textContent = "تعديل الأسعار";
+      document.querySelectorAll('.sidebar button')[2].textContent = "السيارات المؤجرة";
+      document.querySelectorAll('.sidebar button')[3].textContent = "قائمة السيارات";
+      document.querySelectorAll('.sidebar button')[4].textContent = "معلومات المستأجرين";
+      document.querySelector('.logout-btn').textContent = "تسجيل الخروج";
+      document.getElementById("language-switcher").textContent = "EN";
+    }
+  }
+
+  function logout() {
+    let confirmLogout = confirm("هل أنت متأكد أنك تريد تسجيل الخروج؟");
+    if (confirmLogout) {
+        window.history.back(); // الرجوع إلى الصفحة السابقة
+        // أو يمكنك توجيهه إلى صفحة تسجيل الدخول مثلاً:
+        // window.location.href = "login.html";
+    }
+}
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // جلب بيانات السيارات المتاحة من الخادم
+    fetch('http://localhost/ApiCarAAPP/index.php?endpoint=available_cars')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tableBody = document.querySelector('#available-cars-table tbody');
+            tableBody.innerHTML = ''; // مسح المحتوى القديم
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4">لا توجد سيارات متاحة</td></tr>';
+                return;
+            }
+
+            // إضافة البيانات إلى الجدول
+            data.forEach(car => {
+                const row = `
+                    <tr>
+                        <td>${car.brand} ${car.model}</td>
+                        <td>${car.price}</td>
+                        <td>${car.status === 'available' ? 'متوفرة' : 'غير متوفرة'}</td>
+                        <td><img src="${car.image}" alt="${car.brand}" width="100"></td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
+
+function addImagesAndSpecs() {
+    const carId = document.getElementById('car-selectB').value;
+    const carImages = document.getElementById('car-imagesB').files;
+    const carType = document.getElementById('car-typeB').value;
+    const carModel = document.getElementById('car-modelB').value;
+    const carEngine = document.getElementById('car-engineB').value;
+    const carColor = document.getElementById('car-colorB').value;
+    const carPrice = document.getElementById('car-priceB').value;
+alert(document.getElementById('car-price').value);
+alert(carId+"-"+carColor+"-"+carModel+"-"+carEngine+"-"+carPrice+"-"+carType);
+    if (!carId || carImages.length === 0 || !carType || !carModel || !carEngine || !carColor || !carPrice) {
+        alert("يرجى إدخال جميع البيانات" +carModel);
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('car_id', carId);
+    formData.append('type', carType);
+    formData.append('model', carModel);
+    formData.append('engine', carEngine);
+    formData.append('color', carColor);
+    formData.append('price', carPrice);
+
+    for (let i = 0; i < carImages.length; i++) {
+        formData.append('images[]', carImages[i]);
+    }
+
+    fetch('http://localhost/ApiCarAAPP/index.php?endpoint=add_images_specs', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message); // عرض رسالة نجاح
+            window.location.reload(); // إعادة تحميل الصفحة
+        } else {
+            alert(data.message); // عرض رسالة خطأ
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("حدث خطأ في الاتصال بالخادم");
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // جلب بيانات السيارات المؤجرة من الخادم
+    fetch('http://localhost/ApiCarAAPP/index.php?endpoint=rented_cars')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tableBody = document.querySelector('#rented-cars-table tbody');
+            tableBody.innerHTML = ''; // مسح المحتوى القديم
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4">لا توجد سيارات مؤجرة</td></tr>';
+                return;
+            }
+
+            // إضافة البيانات إلى الجدول
+            data.forEach(car => {
+                const row = `
+                    <tr>
+                        <td>${car.brand} ${car.model}</td>
+                        <td>${car.renter_name}</td>
+                        <td>${car.rental_duration} أيام</td>
+                        <td>${car.price} ريال</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // جلب بيانات جميع المستأجرين من الخادم
+    fetch('http://localhost/ApiCarAAPP/index.php?endpoint=all_renters_info')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tableBody = document.querySelector('#renter-info-table tbody');
+            tableBody.innerHTML = ''; // مسح المحتوى القديم
+
+            if (data.error) {
+                tableBody.innerHTML = `<tr><td colspan="5">${data.error}</td></tr>`;
+                return;
+            }
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5">لا توجد بيانات للمستأجرين</td></tr>';
+                return;
+            }
+
+            // إضافة البيانات إلى الجدول
+            data.forEach(renter => {
+                const row = `
+                    <tr>
+                        <td>${renter.renter_name}</td>
+                        <td>${renter.national_id}</td>
+                        <td>${renter.brand} ${renter.model}</td>
+                        <td>${renter.rental_duration} أيام</td>
+                        <td>${new Date(renter.rental_date).toLocaleDateString()}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    // جلب قائمة السيارات من الـ API
+    fetch('http://localhost/ApiCarAAPP/index.php?endpoint=get_cars')
+        .then(response => response.json())
+        .then(cars => {
+            let selectElement = document.getElementById('car-select');
+            cars.forEach(car => {
+              let option = document.createElement('option');
+                 option.value = car.id; // معرّف السيارة
+                  option.textContent = car.brand; // اسم السيارة
+                  selectElement.appendChild(option);
+            });
+        })
+    //     .then(response => {
+    //     if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //     }
+    //     return response.json();
+    // })
+    // .then(data => {
+    //     console.log(data); // Handle the JSON data
+    // })
+    // .catch(error => {
+    //     console.error('Error:', error);  // Handle any errors (network issues or invalid JSON)
+    // });
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    // جلب قائمة السيارات من الـ API
+    fetch('http://localhost/ApiCarAAPP/index.php?endpoint=get_cars')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(cars => {
+            let selectElement = document.getElementById('car-selectB');
+            if (selectElement) {
+                cars.forEach(car => {
+                    let option = document.createElement('option');
+                    option.value = car.id; // معرّف السيارة
+                    option.textContent = car.brand; // اسم السيارة
+                    selectElement.appendChild(option);
+                });
+            } else {
+                console.error('Element with id "car-select" not found');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
+
+document.getElementById('save-price').addEventListener('click', function() {
+    var carId = document.getElementById('car-select').value;
+    var newPrice = document.getElementById('new-price').value;
+
+    // التأكد من أن السعر ليس فارغًا
+    if (!newPrice) {
+        alert('من فضلك أدخل السعر الجديد');
+        return;
+    }
+
+    // بناء البيانات التي سيتم إرسالها
+    var data = {
+        car_id: carId,
+        price: newPrice
+    };
+
+    // إرسال طلب PUT إلى الخادم
+    fetch('http://localhost/ApiCarAAPP/index.php?endpoint=update_price', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.status === 'success') {
+            alert(result.message); // رسالة النجاح
+        } else {
+            alert(result.message); // رسالة الخطأ
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+// function addCar() {
+//     const carName = document.getElementById('car-name').value;
+//     const carModel = document.getElementById('car-model').value;
+//     const carColors = document.getElementById('car-colors').value;
+//     const carType = document.getElementById('car-type').value;
+//     const carPrice = document.getElementById('car-price').value;
+//     const carImage = document.getElementById('car-image').files[0];
+
+//     if (!carName || !carModel || !carColors || !carType || !carPrice || !carImage) {
+//         alert("يرجى إدخال جميع البيانات");
+//         return;
+//     }
+
+//     const formData = new FormData();
+//     formData.append('brand', carName);
+//     formData.append('model', carModel);
+//     formData.append('colors', carColors);
+//     formData.append('type', carType);
+//     formData.append('price', carPrice);
+//     formData.append('image', carImage);
+
+//     fetch('http://localhost/ApiCarAAPP/index.php?endpoint=add_car', {
+//         method: 'POST',
+//         body: formData
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.message) {
+//             alert(data.message); // عرض رسالة نجاح
+//             // إعادة تحميل الصفحة أو تحديث الجدول
+//             window.location.reload();
+//         } else if (data.error) {
+//             alert(data.error+"تتتتتتتتتتتتتتتتتتتتتتتتتت"); // عرض رسالة خطأ
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//         alert("حدث خطأ في الاتصال بالخادم");
+//     });
+// }
+function addCar() {
+    const carName = document.getElementById('car-name').value;
+    const carModel = document.getElementById('car-model').value;
+    const carColors = document.getElementById('car-colors').value;
+    const carType = document.getElementById('car-type').value;
+    const carPrice = document.getElementById('car-price').value;
+    const carImage = document.getElementById('car-image').files[0];
+
+    if (!carName || !carModel || !carColors || !carType || !carPrice || !carImage) {
+        alert("يرجى إدخال جميع البيانات");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('brand', carName);
+    formData.append('model', carModel);
+    formData.append('colors', carColors);
+    formData.append('type', carType);
+    formData.append('price', carPrice);
+    formData.append('image', carImage);
+
+    fetch('http://localhost/ApiCarAAPP/index.php?endpoint=add_car', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message); // عرض رسالة نجاح
+            window.location.reload(); // إعادة تحميل الصفحة
+        } else {
+            alert(data.message); // عرض رسالة خطأ
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("حدث خطأ في الاتصال بالخادم");
+    });
+}
+</script>
+
+</body>
+</html>

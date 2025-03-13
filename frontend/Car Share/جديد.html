@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental Sign Up</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #5e5e5e, #b8b8b8);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            position: relative;
+        }
+
+        .top-buttons {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .top-buttons button {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button {
+            background-color: #dc3545;
+            color: white;
+        }
+        .back-button:hover {
+            background-color: #c82333;
+        }
+
+        .language-button {
+            background-color: #28a745;
+            color: white;
+        }
+        .language-button:hover {
+            background-color: #218838;
+        }
+
+        .signup-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 260px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .signup-container h2 {
+            font-size: 22px;
+            color: #4A90E2;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .signup-btn {
+            width: 100%;
+            padding: 8px;
+            background-color: #4A90E2;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .signup-btn:hover {
+            background-color: #357ABD;
+        }
+
+        .login-link {
+            font-size: 12px;
+        }
+
+        .login-link a {
+            color: #4A90E2;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-buttons">
+        <button onclick="toggleLanguage()" class="language-button" id="language-button">ع</button>
+    </div>
+
+    <!-- <div class="signup-container">
+        <h2 id="signup-title">Sign Up</h2>
+        <form>
+            <div class="form-group">
+                <label for="full-name" id="full-name-label">Full Name</label>
+                <input type="text" id="full-name" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone" id="phone-label">Phone Number</label>
+                <input type="tel" id="phone" placeholder="Enter your phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="email" id="email-label">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password" id="password-label">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password" id="confirm-password-label">Confirm Password</label>
+                <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+            </div>
+            <button type="submit" class="signup-btn" id="signup-button">Sign Up</button>
+        </form>
+        <div class="login-link">
+            <p id="login-text">Already have an account? <a href="دخول.html">Login here</a></p>
+        </div>
+    </div> -->
+    <!-- <div class="signup-container">
+        <h2 id="signup-title">Sign Up</h2>
+        <form id="signup-form">
+            <div class="form-group">
+                <label for="full-name" id="full-name-label">Full Name</label>
+                <input type="text" id="full-name" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone" id="phone-label">Phone Number</label>
+                <input type="tel" id="phone" placeholder="Enter your phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="email" id="email-label">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password" id="password-label">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password" id="confirm-password-label">Confirm Password</label>
+                <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+            </div>
+            <div class="form-group">
+                <label for="role" id="role-label">Role</label>
+                <select id="role" required>
+                    <option value="renter">مستأجر</option>
+                    <option value="customer">عميل</option>
+                </select>
+            </div>
+            <button type="submit" class="signup-btn" id="signup-button">Sign Up</button>
+        </form>
+        <div class="login-link">
+            <p id="login-text">Already have an account? <a href="دخول.html">Login here</a></p>
+        </div>
+    </div> -->
+
+    <div class="signup-container">
+        <h2 id="signup-title">Sign Up</h2>
+        <form id="signup-form">
+            <!-- حقل الاسم الكامل -->
+            <div class="form-group">
+                <label for="full-name" id="full-name-label">Full Name</label>
+                <input type="text" id="full-name" placeholder="Enter your full name" required>
+            </div>
+    
+            <!-- حقل الرقم الوطني -->
+            <div class="form-group">
+                <label for="national-id" id="national-id-label">National ID</label>
+                <input type="text" id="national-id" placeholder="Enter your national ID" required>
+            </div>
+    
+            <!-- حقل رقم الهاتف -->
+            <div class="form-group">
+                <label for="phone" id="phone-label">Phone Number</label>
+                <input type="tel" id="phone" placeholder="Enter your phone number" required>
+            </div>
+    
+            <!-- حقل البريد الإلكتروني -->
+            <div class="form-group">
+                <label for="email" id="email-label">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+    
+            <!-- حقل كلمة المرور -->
+            <div class="form-group">
+                <label for="password" id="password-label">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+    
+            <!-- حقل تأكيد كلمة المرور -->
+            <div class="form-group">
+                <label for="confirm-password" id="confirm-password-label">Confirm Password</label>
+                <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+            </div>
+    
+            <!-- حقل الدور (role) -->
+            <div class="form-group">
+                <label for="role" id="role-label">Role</label>
+                <select id="role" required>
+                    <option value="renter">مستأجر</option>
+                </select>
+            </div>
+    
+            <!-- زر التسجيل -->
+            <button type="submit" class="signup-btn" id="signup-button">Sign Up</button>
+        </form>
+        <div class="login-link">
+            <p id="login-text">Already have an account? <a href="دخول.html">Login here</a></p>
+        </div>
+    </div>
+    
+   <script>
+        let isEnglish = true; // افترض أن اللغة الافتراضية هي الإنجليزية
+
+function toggleLanguage() {
+    const elements = {
+        'signup-title': isEnglish ? "تسجيل حساب" : "Sign Up",
+        'full-name-label': isEnglish ? "الاسم الكامل" : "Full Name",
+        'national-id-label': isEnglish ? "الرقم الوطني" : "National ID",
+        'phone-label': isEnglish ? "رقم الهاتف" : "Phone Number",
+        'email-label': isEnglish ? "البريد الإلكتروني" : "Email Address",
+        'password-label': isEnglish ? "كلمة المرور" : "Password",
+        'confirm-password-label': isEnglish ? "تأكيد كلمة المرور" : "Confirm Password",
+        'role-label': isEnglish ? "الدور" : "Role",
+        'signup-button': isEnglish ? "تسجيل" : "Sign Up",
+        'login-text': isEnglish ? "لديك حساب؟ <a href='دخول.html'>سجل الدخول هنا</a>" : "Already have an account? <a href='دخول.html'>Login here</a>",
+        'language-button': isEnglish ? "EN" : "ع"
+    };
+
+    // تحديث النصوص في الواجهة
+    for (const [id, text] of Object.entries(elements)) {
+        const element = document.getElementById(id);
+        if (element) {
+            if (id === 'login-text') {
+                element.innerHTML = text; // استخدام innerHTML للنصوص التي تحتوي على روابط
+            } else {
+                element.textContent = text; // استخدام textContent للنصوص العادية
+            }
+        }
+    }
+
+    // تبديل حالة اللغة
+    isEnglish = !isEnglish;
+}
+
+        function goBack() {
+            window.history.back();
+        }
+      
+
+function handleSignup(event) {
+    event.preventDefault(); // منع إرسال النموذج بشكل تقليدي
+    // جمع بيانات النموذج
+    const formData = {
+        name: document.getElementById('full-name').value,
+        national_id: document.getElementById('national-id').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        confirm_password: document.getElementById('confirm-password').value,
+        role: document.getElementById('role').value
+    };
+
+    // التحقق من تطابق كلمة المرور
+    if (formData.password !== formData.confirm_password) {
+        alert('كلمة المرور غير متطابقة');
+        return;
+    }
+
+    // إرسال البيانات إلى الخادم
+    fetch('http://localhost/ApiCarAAPP/index.php?endpoint=signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message); // عرض رسالة نجاح
+            window.location.href = 'دخول.html'; // توجيه المستخدم إلى صفحة الدخول
+        } else if (data.error) {
+            alert(data.error); // عرض رسالة خطأ
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+// ربط الدالة بحدث submit للنموذج
+document.getElementById('signup-form').addEventListener('submit', handleSignup);
+    </script>
+</body>
+</html>

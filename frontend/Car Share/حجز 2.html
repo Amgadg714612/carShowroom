@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">حجز سيارة</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to right, #5e5e5e, #b8b8b8);
+      font-family: 'Tajawal', sans-serif;
+      background-color: #f9fafb;
+      direction: rtl;
+    }
+    .header {
+      background-color: #4070a7;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      position: relative;
+    }
+    .header .lang-switch {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      background-color: #fff;
+      color: #4070a7;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .header .back-btn {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      background-color: #fff;
+      color: #4070a7;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+    .form-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 500px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      width: 100%;
+    }
+    .btn:hover {
+      background-color: #357ab7;
+    }
+    #total-price {
+      font-size: 18px;
+      font-weight: bold;
+      color: #d9534f;
+      margin-top: 10px;
+      text-align: center;
+      padding: 10px;
+      background-color: #fff3f3;
+      border-radius: 8px;
+      border: 1px solid #d9534f;
+    }
+  </style>
+</head>
+
+<body>
+  
+  <h1>حجز سيارة</h1>
+
+  <div id="car-details">
+      <!-- سيتم ملء التفاصيل هنا باستخدام JavaScript -->
+  </div>
+
+  <div class="header">
+    <span class="back-btn" onclick="goBack()">رجوع</span>
+    <span class="lang-switch" onclick="switchLanguage()">English</span>
+    <span id="header-title">حجز سيارة</span>
+  </div>
+  <div class="container">
+    <div class="form-container">
+      <h2 id="form-title">تفاصيل الحجز</h2>
+      <div class="form-group">
+        <label id="delivery-location-label">موقع التسليم</label>
+        <select id="delivery-location">
+          <option value="location1">أبو عريش</option>
+          <option value="location2">جازان</option>
+          <option value="location3">صبيا</option>
+          <option value="location4">موقع متفق عليه</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label id="km-option-label">عدد الكيلومترات</label>
+        <select id="km-option" onchange="calculateTotal()">
+          <option value="unlimited" data-extra="0">مفتوح</option>
+          <option value="limited" data-extra="50">محدود (+50 ريال/يوم)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label id="car-type-label">نوع المركبة</label>
+        <select id="car-type" onchange="calculateTotal()">
+          <option value="Lexus" data-price="320">لكزس - 320 ريال/يوم</option>
+          <option value="Civic" data-price="140">سيفيك - 140 ريال/يوم</option>
+          <option value="Ford Taurus" data-price="200">فورد تورس - 200 ريال/يوم</option>
+          <option value="Tahoe" data-price="300">تاهو - 300 ريال/يوم</option>
+          <option value="Renault" data-price="140">رينو - 140 ريال/يوم</option>
+          <option value="Camry" data-price="180">كامري - 180 ريال/يوم</option>
+          <option value="BMW" data-price="600">بي ام دبليو - 600 ريال/يوم</option>
+          <option value="Jeep" data-price="250">جيب - 250 ريال/يوم</option>
+          <option value="Audi" data-price="700">أودي - 700 ريال/يوم</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label id="pickup-date-label">تاريخ الاستلام</label>
+        <input type="date" id="pickup-date" onchange="calculateTotal()">
+      </div>
+      <div class="form-group">
+        <label id="return-date-label">تاريخ التسليم</label>
+        <input type="date" id="return-date" onchange="calculateTotal()">
+      </div>
+      <div id="total-price">السعر الإجمالي: 0 ريال</div>
+      <button class="btn" onclick="confirmBooking()">تأكيد الحجز</button>
+    </div>
+  </div>
+
+  <script>
+    let language = 'ar';
+// جلب معرف السيارة من الرابط
+const urlParams = new URLSearchParams(window.location.search);
+      const carId = urlParams.get('carId');
+
+      // جلب تفاصيل السيارة من الخادم
+      fetch(`http://localhost/ApiCarAAPP/index.php?endpoint=get_car_details&id=${carId}`)
+          .then(response => response.json())
+          .then(car => {
+              const carDetails = document.getElementById('car-details');
+              carDetails.innerHTML = `
+                  <img src="${car.image}" alt="${car.brand}" style="width: 100%; height: auto; border-radius: 10px;">
+                  <h2>${car.brand} ${car.model}</h2>
+                  <p><strong>الوصف:</strong> ${car.description}</p>
+                  <p><strong>السعر:</strong> ${car.price} ريال/يوم</p>
+              `;
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              alert("حدث خطأ أثناء جلب تفاصيل السيارة");
+          });
+          
+    function switchLanguage() {
+      if (language === 'ar') {
+        language = 'en';
+        document.documentElement.lang = 'en';
+        document.getElementById('page-title').textContent = 'Car Reservation';
+        document.getElementById('header-title').textContent = 'Car Reservation';
+        document.getElementById('form-title').textContent = 'Booking Details';
+        document.getElementById('delivery-location-label').textContent = 'Delivery Location';
+        document.getElementById('km-option-label').textContent = 'Kilometers Option';
+        document.getElementById('car-type-label').textContent = 'Car Type';
+        document.getElementById('pickup-date-label').textContent = 'Pick-up Date';
+        document.getElementById('return-date-label').textContent = 'Return Date';
+        document.getElementById('total-price').textContent = 'Total Price: 0 SAR';
+        
+        document.querySelectorAll('#delivery-location option').forEach(option => {
+          const value = option.textContent;
+          if (value === 'أبو عريش') option.textContent = 'Abu Arish';
+          else if (value === 'جازان') option.textContent = 'Jazan';
+          else if (value === 'صبيا') option.textContent = 'Sabya';
+          else if (value === 'موقع متفق عليه') option.textContent = 'Agreed Location';
+        });
+
+        document.querySelectorAll('#km-option option').forEach(option => {
+          const value = option.textContent;
+          if (value === 'محدود') option.textContent = 'Limited';
+          else if (value === 'مفتوح (+50 ريال/يوم)') option.textContent = 'Unlimited (+50 SAR/day)';
+        });
+
+        document.querySelector('.lang-switch').textContent = 'عربي';
+      } else {
+        language = 'ar';
+        document.documentElement.lang = 'ar';
+        document.getElementById('page-title').textContent = 'حجز سيارة';
+        document.getElementById('header-title').textContent = 'حجز سيارة';
+        document.getElementById('form-title').textContent = 'تفاصيل الحجز';
+        document.getElementById('delivery-location-label').textContent = 'موقع التسليم';
+        document.getElementById('km-option-label').textContent = 'عدد الكيلومترات';
+        document.getElementById('car-type-label').textContent = 'نوع المركبة';
+        document.getElementById('pickup-date-label').textContent = 'تاريخ الاستلام';
+        document.getElementById('return-date-label').textContent = 'تاريخ التسليم';
+        document.getElementById('total-price').textContent = 'السعر الإجمالي: 0 ريال';
+        
+        document.querySelectorAll('#delivery-location option').forEach(option => {
+          const value = option.textContent;
+          if (value === 'Abu Arish') option.textContent = 'أبو عريش';
+          else if (value === 'Jazan') option.textContent = 'جازان';
+          else if (value === 'Sabya') option.textContent = 'صبيا';
+          else if (value === 'Agreed Location') option.textContent = 'موقع متفق عليه';
+        });
+
+        document.querySelectorAll('#km-option option').forEach(option => {
+          const value = option.textContent;
+          if (value === 'UnLimited') option.textContent = 'مفتوح';
+          else if (value === 'limited (+50 SAR/day)') option.textContent = 'محدود (+50 ريال/يوم)';
+        });
+
+        document.querySelector('.lang-switch').textContent = 'English';
+      }
+    }
+
+    function calculateTotal() {
+      let carType = document.getElementById("car-type");
+      let pricePerDay = parseInt(carType.options[carType.selectedIndex].getAttribute("data-price"));
+      let kmOption = document.getElementById("km-option");
+      let extraCharge = parseInt(kmOption.options[kmOption.selectedIndex].getAttribute("data-extra"));
+      let pickupDate = new Date(document.getElementById("pickup-date").value);
+      let returnDate = new Date(document.getElementById("return-date").value);
+      
+      if (!isNaN(pickupDate) && !isNaN(returnDate) && returnDate > pickupDate) {
+        let days = Math.ceil((returnDate - pickupDate) / (1000 * 60 * 60 * 24));
+        let totalPrice = days * (pricePerDay + extraCharge);
+        document.getElementById("total-price").textContent = `السعر الإجمالي: ${totalPrice} ريال`;
+      } else {
+        document.getElementById("total-price").textContent = "السعر الإجمالي: 0 ريال";
+      }
+    }
+
+    function confirmBooking() {
+      calculateTotal();
+      let totalPrice = document.getElementById("total-price").textContent.split(":")[1].trim();
+      localStorage.setItem('totalPrice', totalPrice);
+      window.location.href = "دفع.html";
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+</body>
+</html>

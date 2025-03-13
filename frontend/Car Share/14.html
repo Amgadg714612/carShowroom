@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الدفع</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to right, #5e5e5e, #b8b8b8);
+      font-family: 'Tajawal', sans-serif;
+      background-color: #f9fafb;
+      direction: rtl;
+    }
+
+    .header {
+      background-color: #4070a7;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+
+    .payment-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 500px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background-color: #357ab7;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">الدفع</div>
+
+  <div class="container">
+    <div class="payment-container">
+      <h2>تفاصيل الدفع</h2>
+      <div class="form-group">
+        <label>رقم البطاقة الائتمانية</label>
+        <input type="text" id="card-number" placeholder="أدخل رقم البطاقة الائتمانية">
+      </div>
+
+      <div class="form-group">
+        <label>تاريخ الانتهاء</label>
+        <input type="month" id="expiry-date">
+      </div>
+
+      <div class="form-group">
+        <label>رمز الأمان</label>
+        <input type="text" id="cvv" placeholder="أدخل رمز الأمان">
+      </div>
+
+      <button class="btn" onclick="completePayment()">إتمام الدفع</button>
+    </div>
+  </div>
+
+  <script>
+    function completePayment() {
+      const cardNumber = document.getElementById('card-number').value;
+      const expiryDate = document.getElementById('expiry-date').value;
+      const cvv = document.getElementById('cvv').value;
+
+  
+      if (cardNumber && expiryDate && cvv) {
+        alert("تمت عملية الدفع بنجاح!");
+        // توجيه العميل إلى صفحة تأكيد الحجز أو رسالة شكر.
+      } else {
+        alert("يرجى إدخال جميع تفاصيل الدفع.");
+      }
+    }
+ 
+  </script>
+</body>
+</html>

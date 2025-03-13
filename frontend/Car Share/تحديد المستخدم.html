@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختيار نوع المستخدم</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f4f4f9;
+            background: linear-gradient(to right, #5e5e5e, #b8b8b8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .box {
+            flex: 1;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .renter {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+        }
+
+        .owner {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 5px;
+            font-size: 16px;
+            text-decoration: none;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .btn:hover {
+            background: white;
+            color: #333;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        .top-buttons {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .button {
+            background: #286a99;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+            border: none;
+        }
+
+        .button:hover {
+            background: #1d4f7c;
+        }
+    </style>
+</head>
+<body>
+
+<!-- أزرار العودة وتغيير اللغة -->
+<div class="top-buttons">
+    <button class="button" onclick="goBack()">العودة</button>
+    <button class="button" onclick="switchLanguage()" id="language-switcher">EN</button>
+</div>
+
+<div class="container">
+    <div class="box renter" onclick="redirectTo('renter')">
+        <h2 id="renter-heading">مستأجر</h2>
+        <p id="renter-description">تصفح السيارات المتاحة واستأجر بسهولة.</p>
+        <a href="دخول.html" class="btn" id="renter-btn">تسجيل الدخول</a>
+    </div>
+    <div class="box owner" onclick="redirectTo('owner')">
+        <h2 id="owner-heading">مؤجر</h2>
+        <p id="owner-description">قم بإدارة وتأجير مركباتك بكل سهولة.</p>
+        <a href="مؤجر1.html" class="btn" id="owner-btn">تسجيل الدخول</a>
+    </div>
+</div>
+
+<script>
+    function redirectTo(userType) {
+        if (userType === 'renter') {
+            window.location.href = "دخول.html";
+        } else if (userType === 'owner') {
+            window.location.href = "مؤجر1.html";
+        }
+    }
+
+    function goBack() {
+        window.location.href = "index.html"; // استبدل "الرئيسية.html" بالصفحة المطلوبة
+    }
+
+    function switchLanguage() {
+        const currentLang = document.documentElement.lang;
+
+        if (currentLang === "ar") {
+            document.documentElement.lang = "en";
+            document.body.style.direction = "ltr";
+            document.getElementById("renter-heading").textContent = "Renter";
+            document.getElementById("renter-description").textContent = "Browse available cars and rent easily.";
+            document.getElementById("renter-btn").textContent = "Login";
+            document.getElementById("owner-heading").textContent = "Owner";
+            document.getElementById("owner-description").textContent = "Manage and rent your vehicles easily.";
+            document.getElementById("owner-btn").textContent = "Login";
+            document.getElementById("language-switcher").textContent = "ع";
+        } else {
+            document.documentElement.lang = "ar";
+            document.body.style.direction = "rtl";
+            document.getElementById("renter-heading").textContent = "مستأجر";
+            document.getElementById("renter-description").textContent = "تصفح السيارات المتاحة واستأجر بسهولة.";
+            document.getElementById("renter-btn").textContent = "تسجيل الدخول";
+            document.getElementById("owner-heading").textContent = "مؤجر";
+            document.getElementById("owner-description").textContent = "قم بإدارة وتأجير مركباتك بكل سهولة.";
+            document.getElementById("owner-btn").textContent = "تسجيل الدخول";
+            document.getElementById("language-switcher").textContent = "EN";
+        }
+    }
+</script>
+
+</body>
+</html>

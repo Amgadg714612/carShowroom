@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معرض صور المركبة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            direction: rtl;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .slider-container {
+            position: relative;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .slides {
+            display: none;
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .active {
+            display: block;
+        }
+
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            border-radius: 50%;
+        }
+
+        .prev { left: 10px; }
+        .next { right: 10px; }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .thumbnails {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .thumbnails img {
+            width: 60px;
+            height: 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .thumbnails img:hover {
+            transform: scale(1.1);
+        }
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #286a99;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #286a99;
+        }
+        .car-info {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .car-info h3 {
+            margin-bottom: 10px;
+        }
+
+        .car-info p {
+            font-size: 1.1em;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>    Car photo gallery</h1>
+
+    <div class="slider-container">
+        <img class="slides active" src="imageCar/audy1.png " alt="صورة 1">
+        <img class="slides active" src=" imageCar/audy2.png" alt="صورة 1">
+        <img class="slides active" src=" imageCar/audy3.png " alt="صورة 1">
+        <img class="slides" src="imageCar/audy4.png" alt="صورة 2">
+        <img class="slides" src=" imageCar/audy5.png" alt="صورة 3">
+        
+     
+        <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="next" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+
+    <div class="thumbnails">
+        <img src="imageCar/audy1.png " onclick="currentSlide(1)">
+        <img src=" imageCar/audy2.png" onclick="currentSlide(2)">
+        <img src=" imageCar/audy3.png " onclick="currentSlide(3)">
+        <img src="imageCar/audy4.png" onclick="currentSlide(4)">
+        <img src=" imageCar/audy5.png" onclick="currentSlide(5)">
+         
+         
+    </div>
+    <div class="car-info" id="car-info">
+        <h3>مواصفات السيارة</h3>
+        <p><strong>النوع:</strong> أودي</p>
+        <p><strong>الموديل:</strong> 2024</p>
+        <p><strong>المحرك:</strong>2.0 لتر 4 سلندر</p>
+        <p><strong>اللون:</strong> ازرق</p>
+        <p><strong>السعر:</strong> 700 ريال/يوم</p>
+    </div> 
+    <button class="back-button" onclick="goBack()">Back</button>
+
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+        const carInfo = [
+             { model: 'أودي', year: '2024', engine: '2.0 لتر 4 سلندر', color: 'أزرق', price: '700 ريال/يوم' },
+           ];
+        function changeSlide(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            let slides = document.getElementsByClassName("slides");
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+
+            slides[slideIndex - 1].style.display = "block";
+        }
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+</body>
+</html>

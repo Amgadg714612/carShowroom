@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مواصفات المركبة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            direction: rtl;
+            text-align: right;
+            padding: 40px;
+            transition: direction 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .vehicle-details {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        .vehicle-image {
+            flex: 1;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .vehicle-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .specifications {
+            flex: 2;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-left: 20px;
+        }
+
+        .specifications h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .specifications ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .specifications ul li {
+            font-size: 1.2em;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .specifications ul li span {
+            font-weight: bold;
+            color: #286a99;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #286a99;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #1d4f7c;
+        }
+
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #286a99;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .language-switcher:hover {
+            background: #1d4f7c;
+        }
+
+        @media (max-width: 768px) {
+            .vehicle-details {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .vehicle-image {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="language-switcher" onclick="switchLanguage()" id="language-switcher">EN</div>
+
+<header>
+    <h1 id="title">مواصفات المركبة</h1>
+</header>
+
+<div class="vehicle-details">
+    <div class="vehicle-image">
+        <img id="car-image" src="" alt="صورة المركبة">
+    </div>
+
+    <div class="specifications">
+        <h2 id="details-title">تفاصيل المركبة</h2>
+        <ul>
+            <li><span id="model-label">الموديل:</span> <span id="model"></span></li>
+            <li><span id="color-label">الألوان المتوفرة:</span> <span id="colors"></span></li>
+            <li><span id="type-label">النوع:</span> <span id="type"></span></li>
+            <li><span id="price-label">السعر:</span> <span id="price"></span></li>
+        </ul>
+        <a href="index.html" class="back-button" id="back-home">العودة إلى الصفحة الرئيسية</a>
+        <button class="back-button" onclick="bookCar()" id="book-now">احجز الآن</button>
+        <a id="more-details-link" class="back-button">تفاصيل أكثر</a>
+    </div>
+</div>
+
+<script>
+    // جلب معرف السيارة من الرابط
+    const urlParams = new URLSearchParams(window.location.search);
+    const carId = urlParams.get('id');
+
+    // تعيين رابط "تفاصيل أكثر" مع إضافة id السيارة
+    const moreDetailsLink = document.getElementById('more-details-link');
+    moreDetailsLink.href = `CarImages.html?id=${carId}`;
+
+    // جلب تفاصيل السيارة من الخادم
+    fetch(`http://localhost/ApiCarAAPP/index.php?endpoint=get_car_details&id=${carId}`)
+        .then(response => response.json())
+        .then(car => {
+            document.getElementById('car-image').src = "http://localhost/ApiCarAAPP/" + car.image;
+            document.getElementById('model').textContent = `${car.brand} ${car.model}`;
+            document.getElementById('colors').textContent = car.colors || "غير متوفر";
+            document.getElementById('type').textContent = car.type || "غير متوفر";
+            document.getElementById('price').textContent = `${parseFloat(car.price).toLocaleString()} ريال/يوم`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("حدث خطأ أثناء جلب تفاصيل السيارة");
+        });
+
+        function redirectToBooking() {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || user.role !== 'renter') {
+            alert("يجب تسجيل الدخول كمستأجر لحجز السيارة");
+        } 
+    }
+    // دالة لحجز السيارة
+    function bookCar() {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || user.role !== 'renter') {
+            alert("يجب تسجيل الدخول كمستأجر لحجز السيارة");
+            window.location.href = 'دخول.html'; // توجيه المستخدم إلى صفحة تسجيل الدخول
+            return;
+        }
+        else {
+            // توجيه المستخدم إلى صفحة الحجز مع إرسال carId و userId
+            window.location.href = `booking.html?carId=${carId}&userId=${user.id}`;
+        }
+        // fetch('http://localhost/ApiCarAAPP/index.php?endpoint=book_car', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         car_id: carId,
+        //         user_id: user.id
+        //     })
+        // })
+        // .then(response => response.json())
+        // .then(data => {
+        //     if (data.status === 'success') {
+        //         alert("تم حجز السيارة بنجاح");
+        //         window.location.href = 'index.html'; // العودة إلى الصفحة الرئيسية
+        //     } else {
+        //         alert(data.message); // عرض رسالة خطأ
+        //     }
+        // })
+        // .catch(error => {
+        //     console.error('Error:', error);
+        //     alert("حدث خطأ أثناء حجز السيارة");
+        // });
+    }
+
+    // دالة لتبديل اللغة
+    function switchLanguage() {
+        const currentLang = document.documentElement.lang;
+        if (currentLang === "ar") {
+            document.documentElement.lang = "en";
+            document.body.style.direction = "ltr";
+            document.body.style.textAlign = "left";
+            document.getElementById("title").textContent = "Vehicle Specifications";
+            document.getElementById("details-title").textContent = "Vehicle Details";
+            document.getElementById("model-label").textContent = "Model:";
+            document.getElementById("color-label").textContent = "Available Colors:";
+            document.getElementById("type-label").textContent = "Type:";
+            document.getElementById("price-label").textContent = "Price:";
+            document.getElementById("back-home").textContent = "Back to Home";
+            document.getElementById("book-now").textContent = "Book Now";
+            document.getElementById("more-details-link").textContent = "More Details";
+            document.getElementById("language-switcher").textContent = "AR";
+        } else {
+            document.documentElement.lang = "ar";
+            document.body.style.direction = "rtl";
+            document.body.style.textAlign = "right";
+            document.getElementById("title").textContent = "مواصفات المركبة";
+            document.getElementById("details-title").textContent = "تفاصيل المركبة";
+            document.getElementById("model-label").textContent = "الموديل:";
+            document.getElementById("color-label").textContent = "الألوان المتوفرة:";
+            document.getElementById("type-label").textContent = "النوع:";
+            document.getElementById("price-label").textContent = "السعر:";
+            document.getElementById("back-home").textContent = "العودة إلى الصفحة الرئيسية";
+            document.getElementById("book-now").textContent = "احجز الآن";
+            document.getElementById("more-details-link").textContent = "تفاصيل أكثر";
+            document.getElementById("language-switcher").textContent = "EN";
+        }
+    }
+</script>
+
+</body>
+</html>

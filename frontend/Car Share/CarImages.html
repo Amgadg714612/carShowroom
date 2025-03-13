@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معرض صور المركبة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            direction: rtl;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .slider-container {
+            position: relative;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .slides {
+            display: none;
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .active {
+            display: block;
+        }
+
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            border-radius: 50%;
+        }
+
+        .prev { left: 10px; }
+        .next { right: 10px; }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .thumbnails {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .thumbnails img {
+            width: 60px;
+            height: 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .thumbnails img:hover {
+            transform: scale(1.1);
+        }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #286a99;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #286a99;
+        }
+
+        .car-info {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .car-info h3 {
+            margin-bottom: 10px;
+        }
+
+        .car-info p {
+            font-size: 1.1em;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>معرض صور المركبة</h1>
+
+    <div class="slider-container" id="slider-container">
+        <!-- سيتم إضافة الصور هنا ديناميكيًا -->
+        <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="next" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+
+    <div class="thumbnails" id="thumbnails">
+        <!-- سيتم إضافة الصور المصغرة هنا ديناميكيًا -->
+    </div>
+
+    <!-- معلومات السيارة -->
+    <div class="car-info" id="car-info">
+        <h3>مواصفات السيارة</h3>
+        <p><strong>النوع:</strong> <span id="car-type"></span></p>
+        <p><strong>الموديل:</strong> <span id="car-model"></span></p>
+        <p><strong>المحرك:</strong> <span id="car-engine"></span></p>
+        <p><strong>اللون:</strong> <span id="car-color"></span></p>
+        <p><strong>السعر:</strong> <span id="car-price"></span></p>
+    </div>
+
+    <button class="back-button" onclick="goBack()">العودة</button>
+
+    <script>
+        // جلب معرف السيارة من الرابط
+        const urlParams = new URLSearchParams(window.location.search);
+        const carId = urlParams.get('id');
+
+        // جلب بيانات السيارة من الخادم
+        // fetch(`http://localhost/ApiCarAAPP/index.php?endpoint=getimages&id=${carId}`)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         // عرض الصور في السلايدر
+        //         const sliderContainer = document.getElementById('slider-container');
+        //         const thumbnailsContainer = document.getElementById('thumbnails');
+        //         const carInfo = JSON.parse(data.specifications); // تحويل المواصفات من JSON إلى كائن
+        //         // عرض الصور
+        //         data.images.forEach((image, index) => {
+        //             // إضافة الصور إلى السلايدر
+        //             const slide = document.createElement('img');
+        //             slide.src = image.image_url;
+        //             slide.alt = `صورة ${index + 1}`;
+        //             slide.classList.add('slides');
+        //             if (index === 0) slide.classList.add('active');
+        //             sliderContainer.appendChild(slide);
+
+        //             // إضافة الصور المصغرة
+        //             const thumbnail = document.createElement('img');
+        //             thumbnail.src = image.image_url;
+        //             thumbnail.alt = `صورة مصغرة ${index + 1}`;
+        //             thumbnail.onclick = () => currentSlide(index + 1);
+        //             thumbnailsContainer.appendChild(thumbnail);
+        //         });
+
+        //         // عرض مواصفات السيارة
+        //         document.getElementById('car-type').textContent = carInfo.type;
+        //         document.getElementById('car-model').textContent = carInfo.model;
+        //         document.getElementById('car-engine').textContent = carInfo.engine;
+        //         document.getElementById('car-color').textContent = carInfo.color;
+        //         document.getElementById('car-price').textContent = carInfo.price;
+        //     })
+        //     .catch(error => {
+        //         console.error('Error:', error);
+        //         alert("حدث خطأ أثناء جلب بيانات السيارة");
+        //     });
+        fetch(`http://localhost/ApiCarAAPP/index.php?endpoint=getimages&id=${carId}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // عرض الصور والمواصفات
+            const images = data.images;
+            const specifications = JSON.parse(data.specifications);
+
+            // عرض الصور في السلايدر
+            const sliderContainer = document.getElementById('slider-container');
+            const thumbnailsContainer = document.getElementById('thumbnails');
+
+            images.forEach((image, index) => {
+                // إضافة الصور إلى السلايدر
+                const slide = document.createElement('img');
+                slide.src ="http://localhost/ApiCarAAPP/"+ image.image_url;
+                slide.alt = `صورة ${index + 1}`;
+                slide.classList.add('slides');
+                if (index === 0) slide.classList.add('active');
+                sliderContainer.appendChild(slide);
+                // إضافة الصور المصغرة
+                const thumbnail = document.createElement('img');
+                thumbnail.src = "http://localhost/ApiCarAAPP/"+image.image_url;
+                thumbnail.alt = `صورة مصغرة ${index + 1}`;
+                thumbnail.onclick = () => currentSlide(index + 1);
+                thumbnailsContainer.appendChild(thumbnail);
+            });
+
+            // عرض مواصفات السيارة
+            document.getElementById('car-type').textContent = specifications.type;
+            document.getElementById('car-model').textContent = specifications.model;
+            document.getElementById('car-engine').textContent = specifications.engine;
+            document.getElementById('car-color').textContent = specifications.color;
+            document.getElementById('car-price').textContent = specifications.price;
+        } else {
+            alert(data.message); // عرض رسالة خطأ
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("حدث خطأ أثناء جلب بيانات السيارة");
+    });
+
+        // وظائف التحكم في السلايدر
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function changeSlide(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            const slides = document.getElementsByClassName("slides");
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+
+            slides[slideIndex - 1].style.display = "block";
+        }
+
+        // وظيفة العودة للصفحة السابقة
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+</body>
+</html>

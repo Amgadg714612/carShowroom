@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .top-buttons {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .top-buttons button {
+            padding: 10px 15px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .language-button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .language-button:hover {
+            background-color: #218838;
+        }
+
+        .back-button {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .back-button:hover {
+            background-color: #c82333;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .input-field {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-field label {
+            display: block;
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #333;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field input:focus {
+            border-color: #286a99;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #286a99;
+            color: white;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-button:hover {
+            background-color: #1e4d72;
+        }
+
+        .register-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1em;
+        }
+
+        .register-link a {
+            color: #286a99;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            color: #1e4d72;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-buttons">
+        <button onclick="goBack()" class="back-button">Back</button>
+        <button onclick="toggleLanguage()" class="language-button" id="language-button">ع</button>
+    </div>
+
+    <!-- <div class="login-container">
+        <h2 id="login-title">Login</h2>
+        <form id="loginForm">
+            <div class="input-field">
+                <label for="email" id="email-label">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+    
+            <div class="input-field">
+                <label for="password" id="password-label">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+    
+            <button type="submit" class="login-button" id="login-button">Login</button>
+        </form>
+    
+        <p id="error-message" style="color: red; display: none;"></p>
+
+        <div class="register-link">
+            <p id="register-text">Don't have an account? <a href="جديد.html" id="register-link">Create a new account</a></p>
+        </div>
+    </div> -->
+
+    <!-- <div class="login-container">
+        <h2 id="login-title">Login</h2>
+        <form id="loginForm">
+            <div class="input-field">
+                <label for="email" id="email-label">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>   
+            <div class="input-field">
+                <label for="password" id="password-label">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+    
+            <button type="submit" class="login-button" id="login-button">Login</button>
+        </form>
+    
+        <p id="error-message" style="color: red; display: none;"></p>
+    
+        <div class="register-link">
+            <p id="register-text">Don't have an account? <a href="جديد.html" id="register-link">Create a new account</a></p>
+        </div>
+    </div> -->
+    <div class="login-container">
+        <h2 id="login-title">Login</h2>
+        <form id="loginForm">
+            <!-- حقل البريد الإلكتروني -->
+            <div class="input-field">
+                <label for="email" id="email-label">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+    
+            <!-- حقل كلمة المرور -->
+            <div class="input-field">
+                <label for="password" id="password-label">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+    
+            <!-- زر تسجيل الدخول -->
+            <button type="submit" class="login-button" id="login-button">Login</button>
+        </form>
+    
+        <!-- رسالة الخطأ -->
+        <p id="error-message" style="color: red; display: none;"></p>
+    
+        <!-- رابط التسجيل -->
+        <div class="register-link">
+            <p id="register-text">Don't have an account? <a href="جديد.html" id="register-link">Create a new account</a></p>
+        </div>
+    </div>
+
+
+    <script>
+        let isEnglish = true;
+
+        function toggleLanguage() {
+            if (isEnglish) {
+                document.getElementById('login-title').textContent = "تسجيل الدخول";
+                document.getElementById('email-label').textContent = "البريد الإلكتروني";
+                document.getElementById('password-label').textContent = "كلمة المرور";
+                document.getElementById('login-button').textContent = "تسجيل الدخول";
+                document.getElementById('register-text').innerHTML = "ليس لديك حساب؟ <a href='جديد.html' id='register-link'>أنشئ حسابًا جديدًا</a>";
+                document.getElementById('language-button').textContent = "EN";
+            } else {
+                document.getElementById('login-title').textContent = "Login";
+                document.getElementById('email-label').textContent = "Email";
+                document.getElementById('password-label').textContent = "Password";
+                document.getElementById('login-button').textContent = "Login";
+                document.getElementById('register-text').innerHTML = "Don't have an account? <a href='جديد.html' id='register-link'>Create a new account</a>";
+                document.getElementById('language-button').textContent = "ع";
+            }
+            isEnglish = !isEnglish;
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // document.getElementById('loginForm').addEventListener('submit', function (e) {
+        //     e.preventDefault();
+        //     const email = document.getElementById('email').value.trim();
+        //     const password = document.getElementById('password').value.trim();
+        //     const errorMessage = document.getElementById('error-message');
+
+        //     const validEmail = "admin@example.com";
+        //     const validPassword = "password123";
+        //     if (email === validEmail && password === validPassword) {
+        //         window.location.href = "index.html";
+        //     } else {
+        //         errorMessage.textContent = isEnglish 
+        //             ? "Incorrect email or password, please try again." 
+        //             : "البريد الإلكتروني أو كلمة المرور غير صحيحة، يرجى المحاولة مرة أخرى.";
+        //         errorMessage.style.display = "block";
+        //     }
+        // });
+
+//         document.getElementById('loginForm').addEventListener('submit', function(event) {
+//     event.preventDefault(); // منع إرسال النموذج بشكل تقليدي
+
+//     // جمع بيانات النموذج
+//     const formData = {
+//         email: document.getElementById('email').value,
+//         password: document.getElementById('password').value
+//     };
+
+//     // إرسال البيانات إلى الخادم
+//     fetch('http://localhost/ApiCarAAPP/index.php?endpoint=login', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(formData)
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         const errorMessage = document.getElementById('error-message');
+//         if (data.message) {
+//             // تسجيل الدخول ناجح
+//             errorMessage.style.display = 'none';
+//             alert(data.message); // عرض رسالة نجاح
+//             window.location.href = 'الرئيسية.html'; // توجيه المستخدم إلى الصفحة الرئيسية
+//         } else if (data.error) {
+//             // عرض رسالة الخطأ
+//             errorMessage.textContent = data.error;
+//             errorMessage.style.display = 'block';
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//     });
+// });
+
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // منع إرسال النموذج بشكل تقليدي
+
+    // جمع بيانات النموذج
+    const formData = {
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+    };
+
+    // إرسال البيانات إلى الخادم
+    fetch('http://localhost/ApiCarAAPP/index.php?endpoint=login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        const errorMessage = document.getElementById('error-message');
+        if (data.message) {
+            // تسجيل الدخول ناجح
+            errorMessage.style.display = 'none';
+
+            // تخزين معلومات المستخدم في localStorage
+            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('hasRental', data.hasRental);
+
+            // توجيه المستخدم إلى الصفحة الرئيسية
+            window.location.href = 'index.html';
+        } else if (data.error) {
+            // عرض رسالة الخطأ
+            errorMessage.textContent = data.error;
+            errorMessage.style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+   </script>
+
+</body>
+</html>
